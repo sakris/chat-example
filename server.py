@@ -1,5 +1,7 @@
 from twisted.internet.protocol import Protocol, Factory
 from twisted.internet import reactor
+from twisted.protocols.basic import LineOnlyReceiver
+import datetime
 
 chatLog = []  # для хранения истории чата
 
