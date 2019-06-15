@@ -25,7 +25,7 @@ class Client(LineOnlyReceiver):
 
         print(f"Client connected: {self.ip}")
 
-        self.transport.write("Welcome to the chat v0.1\n".encode())
+        self.transport.write(f"{self.getTime()} Welcome to the chat v0.1\n".encode())
 
     def dataReceived(self, data: bytes):
         """
@@ -74,6 +74,10 @@ class Client(LineOnlyReceiver):
         if self.login in self.factory.logins:
             self.factory.logins.remove(self.login)
         print(f"Client disconnected: {self.ip}")
+    # Time format    
+    def getTime(self):
+        return '({:%Y/%m/%d %H:%M:%S})'.format(datetime.datetime.now())
+     
 
 
 class Chat(Factory):
