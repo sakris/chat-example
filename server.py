@@ -1,6 +1,8 @@
 from twisted.internet.protocol import Protocol, Factory
 from twisted.internet import reactor
 
+chatLog = []  # для хранения истории чата
+
 
 class Client(Protocol):
     ip: str = None
@@ -35,6 +37,9 @@ class Client(Protocol):
         if self.login is not None:
             server_message = f"{self.login}: {message}"
             self.factory.notify_all_users(server_message)
+            chatLog.append(server_message)
+
+
 
             print(server_message)
         else:
@@ -44,8 +49,12 @@ class Client(Protocol):
                 if not self.factory.check_login(_login):  # проверяем входит ли логин в множество логинов
                     self.factory.logins.add(_login)
                     self.login = _login
+                    # отправляем историю сообщений
+                    for msg in chatLog:
+                        self.factory.notify_all_users(msg)
                 else:
                     print("login double")
+                    self.transport.write("!!!".encode())
                     self.transport.abortConnection()  # обрываем сессию
 
 
