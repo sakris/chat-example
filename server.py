@@ -60,8 +60,8 @@ class Client(LineOnlyReceiver):
                     self.sendLine("*****".encode())
                 else:
                     print("login taken")
-                    self.sendLine("login taken".encode())
-                    self.transport.abortConnection()  # обрываем сессию                             
+                    self.sendLine("Login taken, please new login".encode())
+                    self.transport.loseConnection()  # обрываем сессию                             
                 
             else:
                 print("Error: Invalid client login")
