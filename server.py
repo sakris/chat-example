@@ -4,7 +4,7 @@ from twisted.internet import reactor
 chatLog = []  # для хранения истории чата
 
 
-class Client(LineOnlyReciver):
+class Client(LineOnlyReceiver):
     ip: str = None
     login: str = None
     factory: 'Chat'
