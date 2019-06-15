@@ -38,9 +38,6 @@ class Client(LineOnlyReceiver):
             server_message = f"{self.login}: {message}"
             self.factory.notify_all_users(server_message)
             chatLog.append(server_message)
-
-
-
             print(server_message)
         else:
             if message.startswith("login:"):
@@ -49,19 +46,21 @@ class Client(LineOnlyReceiver):
                 if not self.factory.check_login(_login):  # проверяем входит ли логин в множество логинов
                     self.factory.logins.add(_login)
                     self.login = _login
+                    # new user connected
+                    notification = f"New user connected: {self.login}"
+                    print(notification)
+                    self.factory.notify_all_users(notification)
+                                        
                     # отправляем историю сообщений
+                    self.sendLine("History chat:".encode())
                     for msg in chatLog:
-                        self.sendLine(msg)
+                        self.sendLine(msg.encode())
+                    self.sendLine("*****".encode())
                 else:
-                    print("login double")
-                    self.transport.write("!!!".encode())
-                    self.transport.abortConnection()  # обрываем сессию
-
-
-                notification = f"New user connected: {self.login}"
-
-                self.factory.notify_all_users(notification)
-                print(notification)
+                    print("login taken")
+                    self.sendLine("login taken".encode())
+                    self.transport.abortConnection()  # обрываем сессию                             
+                
             else:
                 print("Error: Invalid client login")
 
