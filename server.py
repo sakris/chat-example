@@ -4,7 +4,7 @@ from twisted.internet import reactor
 chatLog = []  # для хранения истории чата
 
 
-class Client(Protocol):
+class Client(LineOnlyReciver):
     ip: str = None
     login: str = None
     factory: 'Chat'
@@ -51,7 +51,7 @@ class Client(Protocol):
                     self.login = _login
                     # отправляем историю сообщений
                     for msg in chatLog:
-                        self.factory.notify_all_users(msg)
+                        self.sendLine(msg)
                 else:
                     print("login double")
                     self.transport.write("!!!".encode())
